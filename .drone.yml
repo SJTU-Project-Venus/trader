@@ -26,7 +26,8 @@ steps:
     image: plugins/docker
     settings:
       username: wwwumr
-      password: wang19990702
+      password: 
+        from_secret: dockerhub_secrets
       repo: wwwumr/trader
       tags:
         - v1.0.1
