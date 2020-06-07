@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import store from './redux/store/Store';
+import store, { persistor } from './redux/store/Store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { CssBaseline } from '@material-ui/core';
 
 ReactDOM.render(
 	<Provider store={store}>
-		<App />
+		<PersistGate loading={null} persistor={persistor}>
+			<CssBaseline />
+			<App />
+		</PersistGate>
 	</Provider>,
 	document.getElementById('root')
 );

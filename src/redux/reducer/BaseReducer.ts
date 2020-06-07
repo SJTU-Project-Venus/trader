@@ -11,10 +11,7 @@ const baseReducer = (state = initialReduxState.base, action: AnyAction) => {
 			};
 		}
 		case ActionTypes.LOGOUT: {
-			return {
-				...state,
-				user: {...initialReduxState.base.user},
-			};
+			return { ...initialReduxState.base };
 		}
 		default: {
 			return state;

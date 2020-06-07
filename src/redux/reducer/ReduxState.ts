@@ -1,19 +1,28 @@
-export interface BaseReducerState {
-  user: {
-    userId: number
-  }
+export interface LoginUserProps {
+	userId: string;
+	login: boolean;
+}
+
+export interface UserProps {
+	userId: string | undefined;
+	login: boolean;
+}
+
+export interface BaseReducerStateProps {
+	user: UserProps;
 }
 
 export interface ReduxState {
-  base: BaseReducerState
+	base: BaseReducerStateProps;
 }
 
 const initialReduxState: ReduxState = {
-  base: {
-    user: {
-      userId: 1
-    }
-  }
-}
+	base: {
+		user: {
+			userId: undefined,
+			login: false,
+		},
+	},
+};
 
-export default initialReduxState
+export default initialReduxState;
