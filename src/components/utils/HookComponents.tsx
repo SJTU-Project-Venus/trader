@@ -19,12 +19,10 @@ interface HookComponentsProps {
 	label: string;
 	component?: HookComponentsType;
 	reg?: any;
-	name?: string;
+	name: string;
 	type?: string;
 	control?: any;
 	options?: SelectDataFormat[];
-	setValue?: (name: string, pos: string) => void;
-	setLocation?: (name: string, pos: string, provinceCode: string) => void;
 }
 
 /* Text Interface */

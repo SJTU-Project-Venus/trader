@@ -56,7 +56,12 @@ const Login = () => {
 					setTimeout(() => {
 						setSubmitting(false);
 						store.dispatch(
-							BaseAction.login({ userId: values.userId, login: true })
+							BaseAction.login({
+								userId: values.userId,
+								traderName: 'Trader A',
+								traderCompany: 'Trader Company A',
+								login: true,
+							})
 						);
 						history.push('/');
 					}, 1000);

@@ -18,39 +18,30 @@ import {
 } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import {
-	TraderOrder,
 	initialOrder,
+	OrderTypeNameArray,
 	OrderTypeArray,
-	OrderType,
-} from './OrderInterfaces';
+	OrderFormProps,
+	processOrderFormData,
+} from './pending/OrderInterfaces';
 import HookComponents, { HookComponentsType } from '../utils/HookComponents';
+import OrderApi, { OrderType, PendingOrderProps, TraderOrder } from '../../apis/OrderApi';
+import {
+	MarketOrderCols,
+	BrokerNames,
+	FutureNames,
+	LimitOrderCols,
+	StopOrderCols,
+	CancelOrderCols,
+} from './pending/OrderFormCol';
+import MockData from './pending/MockData';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
 };
 
-interface Data {
-	orderId: number;
-	type: string;
-	broker: string;
-	product: string;
-	period: string;
-	price: number;
-	quantity: string;
-}
-
-const createData = (props: Data) => ({
-	orderId: props.orderId,
-	type: props.type,
-	broker: props.broker,
-	product: props.product,
-	period: props.period,
-	price: props.price,
-	quantity: props.quantity,
-});
-
-const columns: Column<Data>[] = [
+const columns: Column<PendingOrderProps>[] = [
 	{
 		title: '订单编号',
 		field: 'orderId',
@@ -60,148 +51,25 @@ const columns: Column<Data>[] = [
 	},
 	{
 		title: '订单类型',
-		field: 'type',
-		sorting: false,
-		cellStyle: cellStyle,
-		editable: 'never',
-	},
-	{
-		title: 'Broker',
-		field: 'broker',
+		field: 'orderType',
 		sorting: false,
 		cellStyle: cellStyle,
 		editable: 'never',
 	},
 	{
 		title: '产品',
-		field: 'product',
-		sorting: false,
-		cellStyle: cellStyle,
-		editable: 'never',
-	},
-	{
-		title: '时间',
-		field: 'period',
-		sorting: false,
-		cellStyle: cellStyle,
-		editable: 'never',
-	},
-	{
-		title: '价格',
-		field: 'price',
+		field: 'futureName',
 		sorting: false,
 		cellStyle: cellStyle,
 		editable: 'never',
 	},
 	{
 		title: '数量',
-		field: 'quantity',
+		field: 'number',
 		sorting: false,
 		cellStyle: { ...cellStyle, borderRight: '1px solid white' },
 		editable: 'never',
 	},
-];
-
-const data = [
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
 ];
 
 interface MyToolBarProps {
@@ -230,14 +98,29 @@ const MyToolBar = (props: MyToolBarProps) => {
 
 const Pending = () => {
 	const [open, setOpen] = React.useState(false);
-	const { control, register, handleSubmit, watch } = useForm<TraderOrder>({
+	const [pendingOrders, setPendingOrders] = React.useState<PendingOrderProps[]>(
+		[]
+	);
+
+	React.useEffect(() => {
+		setPendingOrders(MockData);
+	}, []);
+
+	const { control, register, handleSubmit, watch } = useForm<OrderFormProps>({
 		mode: 'onSubmit',
 		defaultValues: Object.assign({}, initialOrder),
 	});
 
 	const values = watch();
 
-	const onSubmit = (data: TraderOrder) => console.log(data);
+	const onSubmit = (data: OrderFormProps) => {
+		console.log(data);
+		const order: TraderOrder = processOrderFormData(data);
+		console.log(order)
+		OrderApi.createOrder(order).then((res) => {
+			console.log(res);
+		});
+	};
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -252,7 +135,7 @@ const Pending = () => {
 			<MaterialTable
 				title='未完成订单'
 				columns={columns}
-				data={data}
+				data={pendingOrders}
 				components={{
 					Toolbar: () => <MyToolBar click={handleClickOpen} />,
 				}}
@@ -303,77 +186,85 @@ const Pending = () => {
 									control={control}
 									options={OrderTypeArray.map((elem) => {
 										return {
-											label: elem,
+											label: OrderTypeNameArray[elem - 1],
 											value: elem,
 										};
 									})}
 								/>
-								{[OrderType.Martket, OrderType.Limit, OrderType.Stop].indexOf(
-									values.orderType
-								) >= 0 && (
+								{values.orderType === OrderType.MARKET && (
 									<React.Fragment>
-										<HookComponents
-											component={HookComponentsType.SELECT}
-											reg={register}
-											label={'交易类型'}
-											name='order.meta.type'
-											control={control}
-											options={[
-												{
-													label: 'Buy',
-													value: 'buy',
-												},
-												{
-													label: 'Sell',
-													value: 'sell',
-												},
-											]}
-										/>
-										<HookComponents
-											reg={register}
-											label={'交易货物'}
-											name='order.meta.product'
-										/>
-										<HookComponents
-											reg={register}
-											label={'交易数量'}
-											name='order.quantity'
-										/>
-										{values.orderType !== OrderType.Martket && (
-											<HookComponents
-												reg={register}
-												label={'商品价格'}
-												name='order.price'
-											/>
+										{MarketOrderCols(BrokerNames, FutureNames).map(
+											(cols, index) => (
+												<HookComponents
+													component={cols.component}
+													reg={register}
+													label={cols.label}
+													name={cols.name}
+													control={control}
+													options={cols.options}
+													type={cols.type}
+													key={index.toString()}
+												/>
+											)
 										)}
 									</React.Fragment>
 								)}
-								{[OrderType.Cancel].indexOf(values.orderType) >= 0 && (
+								{values.orderType === OrderType.LIMIT && (
 									<React.Fragment>
-										<HookComponents
-											reg={register}
-											label={'订单编号'}
-											name='order.orderId'
-										/>
+										{LimitOrderCols(BrokerNames, FutureNames).map(
+											(cols, index) => (
+												<HookComponents
+													component={cols.component}
+													reg={register}
+													label={cols.label}
+													name={cols.name}
+													control={control}
+													options={cols.options}
+													type={cols.type}
+													key={index.toString()}
+												/>
+											)
+										)}
 									</React.Fragment>
 								)}
-								<HookComponents
-									component={HookComponentsType.SELECT}
-									reg={register}
-									label={'Borker'}
-									name='order.broker'
-									control={control}
-									options={[
-										{
-											label: 'M',
-											value: 'M',
-										},
-										{
-											label: 'T',
-											value: 'T',
-										},
-									]}
-								/>
+								{values.orderType === OrderType.STOP && (
+									<React.Fragment>
+										{StopOrderCols(BrokerNames, FutureNames).map(
+											(cols, index) => (
+												<HookComponents
+													component={cols.component}
+													reg={register}
+													label={cols.label}
+													name={cols.name}
+													control={control}
+													options={cols.options}
+													type={cols.type}
+													key={index.toString()}
+												/>
+											)
+										)}
+									</React.Fragment>
+								)}
+								{values.orderType === OrderType.CANCEL && (
+									<React.Fragment>
+										{CancelOrderCols(
+											pendingOrders.map((elem) => {
+												return elem.orderId;
+											})
+										).map((cols, index) => (
+											<HookComponents
+												component={cols.component}
+												reg={register}
+												label={cols.label}
+												name={cols.name}
+												control={control}
+												options={cols.options}
+												type={cols.type}
+												key={index.toString()}
+											/>
+										))}
+									</React.Fragment>
+								)}
 							</Grid>
 						</form>
 					</DialogContent>

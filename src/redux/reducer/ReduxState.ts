@@ -1,10 +1,14 @@
 export interface LoginUserProps {
 	userId: string;
+	traderName: string;
+	traderCompany: string
 	login: boolean;
 }
 
 export interface UserProps {
 	userId: string | undefined;
+	traderName: string;
+	traderCompany: string
 	login: boolean;
 }
 
@@ -20,6 +24,8 @@ const initialReduxState: ReduxState = {
 	base: {
 		user: {
 			userId: undefined,
+			traderName: '',
+			traderCompany: '',
 			login: false,
 		},
 	},
