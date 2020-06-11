@@ -10,56 +10,68 @@ import {
 	Card,
 	CardContent,
 	CardActions,
+	Snackbar,
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { useHistory } from 'react-router';
-import store from '../redux/store/Store';
-import BaseAction from '../redux/action/BaseAction';
-import UserApi, { LoginProps } from '../apis/UserApi';
+import UserApi, { RegisterProps } from '../apis/UserApi';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
+		root: {
+			maxWidth: '30%',
+			marginLeft: '35%',
+			marginTop: '10%',
+		},
 		actions: {
 			textAlign: 'center',
 		},
 	})
 );
 
-const initialValues: LoginProps = {
-	username: '',
+const initialValues: RegisterProps = {
+	phone: '',
 	password: '',
+	traderCompony: '',
 };
 
-const Login = () => {
+const Register = () => {
 	const classes = useStyles();
 	const history = useHistory();
+	const [open, setOpen] = React.useState<boolean>(false);
+
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	return (
 		<React.Fragment>
+			<Snackbar
+				open={open}
+				autoHideDuration={6000}
+				onClose={handleClose}
+				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+			>
+				<Alert onClose={handleClose} severity='error'>
+					注册失败
+				</Alert>
+			</Snackbar>
 			<Formik
 				onSubmit={(values, { setSubmitting }) => {
 					console.log(values);
-					UserApi.login(values)
-						.then((res) => {
-							console.log('login res', res);
-							const { access_token, userId } = res.data;
-							store.dispatch(
-								BaseAction.login({
-									userId: userId,
-									traderName: values.username,
-									traderCompany: 'A',
-									login: true,
-									access_token: access_token,
-								})
-							);
-							history.push('/');
-						})
-						.catch((err) => {
-							console.log('login err', err);
-						});
-					setSubmitting(false);
+					UserApi.register(values).then((res) => {
+						console.log('register get res', res);
+						if (res.status === 200 && res.data === true) {
+							setSubmitting(false);
+							window.location.reload();
+						} else {
+							setOpen(true);
+							setSubmitting(false);
+						}
+					});
 				}}
 				initialValues={initialValues}
 				render={({ submitForm, isSubmitting }) => (
@@ -71,12 +83,17 @@ const Login = () => {
 										<AccountCircle />
 									</Avatar>
 								}
-								title={'登录'}
+								title={'注册'}
 							/>
 							<CardContent>
 								<Grid container direction='column'>
-									<Field component={TextField} label='手机号' name='username' />
+									<Field component={TextField} label='手机号' name='phone' />
 									<Field component={TextField} label='密码' name='password' />
+									<Field
+										component={TextField}
+										label='所属公司'
+										name='traderCompony'
+									/>
 								</Grid>
 							</CardContent>
 
@@ -89,7 +106,7 @@ const Login = () => {
 									color='primary'
 									variant='contained'
 								>
-									{'登录'}
+									{'注册'}
 								</Button>
 							</CardActions>
 						</Card>
@@ -100,4 +117,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default Register;

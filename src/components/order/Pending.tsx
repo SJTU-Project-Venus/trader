@@ -15,6 +15,7 @@ import {
 	DialogContent,
 	DialogActions,
 	Grid,
+	Snackbar,
 } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import {
@@ -25,7 +26,11 @@ import {
 	processOrderFormData,
 } from './pending/OrderInterfaces';
 import HookComponents, { HookComponentsType } from '../utils/HookComponents';
-import OrderApi, { OrderType, PendingOrderProps, TraderOrder } from '../../apis/OrderApi';
+import OrderApi, {
+	OrderType,
+	PendingOrderProps,
+	TraderOrder,
+} from '../../apis/OrderApi';
 import {
 	MarketOrderCols,
 	BrokerNames,
@@ -35,6 +40,7 @@ import {
 	CancelOrderCols,
 } from './pending/OrderFormCol';
 import MockData from './pending/MockData';
+import Alert from '@material-ui/lab/Alert';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -98,6 +104,7 @@ const MyToolBar = (props: MyToolBarProps) => {
 
 const Pending = () => {
 	const [open, setOpen] = React.useState(false);
+	const [success, setSuccess] = React.useState(false);
 	const [pendingOrders, setPendingOrders] = React.useState<PendingOrderProps[]>(
 		[]
 	);
@@ -114,11 +121,13 @@ const Pending = () => {
 	const values = watch();
 
 	const onSubmit = (data: OrderFormProps) => {
-		console.log(data);
+		console.log('order form data', data);
 		const order: TraderOrder = processOrderFormData(data);
-		console.log(order)
+		console.log('processed order', order);
 		OrderApi.createOrder(order).then((res) => {
-			console.log(res);
+			console.log('create order res', res);
+			setOpen(false);
+			setSuccess(true);
 		});
 	};
 
@@ -132,6 +141,16 @@ const Pending = () => {
 
 	return (
 		<React.Fragment>
+			<Snackbar
+				open={success}
+				autoHideDuration={6000}
+				onClose={() => {setSuccess(false)}}
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+			>
+				<Alert onClose={() => {setSuccess(false)}} severity='success'>
+					发起成功
+				</Alert>
+			</Snackbar>
 			<MaterialTable
 				title='未完成订单'
 				columns={columns}
@@ -186,7 +205,7 @@ const Pending = () => {
 									control={control}
 									options={OrderTypeArray.map((elem) => {
 										return {
-											label: OrderTypeNameArray[elem - 1],
+											label: elem,
 											value: elem,
 										};
 									})}

@@ -6,6 +6,8 @@ import {
 	LastPage,
 	FirstPage,
 } from '@material-ui/icons';
+import OrderApi from '../../apis/OrderApi';
+import { StompService } from '../../apis/Websocket';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -135,6 +137,15 @@ const data = [
 ];
 
 const Finished = () => {
+	const [finishedOrder, setFinishedOrder] = React.useState(data);
+
+	React.useEffect(() => {
+		OrderApi.getHistory().then((res) => {
+			console.log('get history order', res);
+		});
+		const client = StompService().client;
+	}, []);
+
 	return (
 		<React.Fragment>
 			<MaterialTable
@@ -183,7 +194,7 @@ const Finished = () => {
 						cellStyle: { ...cellStyle, borderRight: '1px solid white' },
 					},
 				]}
-				data={data}
+				data={finishedOrder}
 				options={{
 					search: false,
 					sorting: false,
@@ -193,7 +204,7 @@ const Finished = () => {
 					headerStyle: {
 						backgroundColor: 'rgb(248,248,248)',
 					},
-					toolbar: false
+					toolbar: false,
 				}}
 				icons={{
 					NextPage: React.forwardRef((props, ref) => {

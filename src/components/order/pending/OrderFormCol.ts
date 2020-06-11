@@ -1,8 +1,5 @@
 import { SideType } from './../../../apis/OrderApi';
-import {
-	OrderTypeNameArray,
-	TargetTypeArray,
-} from './OrderInterfaces';
+import { OrderTypeNameArray, TargetTypeArray } from './OrderInterfaces';
 import {
 	HookComponentsType,
 	SelectDataFormat,
@@ -162,9 +159,10 @@ export const StopOrderCols = (
 	{
 		label: '转化类型',
 		name: 'targetType',
+		component: HookComponentsType.SELECT,
 		options: TargetTypeArray.map((elem) => {
 			return {
-				label: OrderTypeNameArray[elem],
+				label: elem,
 				value: elem,
 			};
 		}),

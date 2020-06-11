@@ -4,10 +4,10 @@ import Header from './layout/Header';
 import { UserProps, ReduxState } from '../redux/reducer/ReduxState';
 import { connect } from 'react-redux';
 import HomePage from './HomePage';
-import Login from './Login';
 import Order from './order';
 import Market from './market';
 import NotFound from './NotFound';
+import LoginTabs from './LoginTabs';
 
 interface StateProps {
 	user: UserProps;
@@ -28,7 +28,7 @@ const App = (props: Props) => {
 				<Header />
 				<Switch>
 					<Route exact path='/' component={HomePage}></Route>
-					<Route exact path='/login' component={Login}></Route>
+					<Route exact path='/login' component={LoginTabs}></Route>
 					<Route exact path='/market' component={Market}></Route>
 					{user.login && (
 						<React.Fragment>

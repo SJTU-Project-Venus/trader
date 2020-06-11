@@ -1,21 +1,23 @@
+import { TRADER_BACKEND } from './BaseUrlConfig';
 import axios from 'axios';
+import store from '../redux/store/Store';
 
 export enum OrderType {
-	LIMIT = 1,
-	STOP = 2,
-	CANCEL = 3,
-	MARKET = 4,
+	LIMIT = 'LIMIT',
+	STOP = 'STOP',
+	CANCEL = 'CANCEL',
+	MARKET = 'MARKET',
 }
 
 export enum StatusType {
-	PENDING = 1,
-	DONE = 2,
-	CANCELPENDING = 3,
+	PENDING = 'PENDING',
+	DONE = 'DONE',
+	CANCELPENDING = 'CANCELPENDING',
 }
 
 export enum SideType {
-	BUY = 1,
-	SELL = 2,
+	BUY = 'BUY',
+	SELL = 'SELL',
 }
 
 export interface TraderOrder {
@@ -61,12 +63,28 @@ export interface PendingOrderProps {
 }
 
 const BaseApi = axios.create({
-	baseURL: 'http://localhost:8080',
+	baseURL: TRADER_BACKEND,
+	headers: {
+		'Content-Type': 'application/json',
+	},
 });
 
 const OrderApi = {
 	createOrder: (order: TraderOrder) => {
-		return BaseApi.post('/order/create', order);
+		return BaseApi.post('/order/create', order, {
+			params: {
+				access_token: store.getState().base.user.access_token,
+			},
+		});
+	},
+	getHistory: () => {
+		const { traderName, access_token } = store.getState().base.user;
+
+		return BaseApi.get('/order/history/'.concat(traderName), {
+			params: {
+				access_token: access_token,
+			},
+		});
 	},
 };
 

@@ -98,6 +98,8 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				traderCompany: traderCompany,
 				traderName: traderName,
 				Status: StatusType.PENDING,
+				number: tmpOrder.number,
+				unitPrice: tmpOrder.unitPrice,
 			};
 			break;
 		}
@@ -109,6 +111,8 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				traderCompany: traderCompany,
 				traderName: traderName,
 				Status: StatusType.PENDING,
+				number: tmpOrder.number,
+				unitPrice: tmpOrder.unitPrice,
 			};
 
 			break;
@@ -121,6 +125,8 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				traderCompany: traderCompany,
 				traderName: traderName,
 				Status: StatusType.PENDING,
+				number: tmpOrder.number,
+				unitPrice: tmpOrder.unitPrice,
 			};
 
 			break;
