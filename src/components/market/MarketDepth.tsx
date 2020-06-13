@@ -6,6 +6,7 @@ import {
 	LastPage,
 	FirstPage,
 } from '@material-ui/icons';
+import StompService from '../../apis/Websocket';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -94,6 +95,15 @@ const data: Data[] = [
 ];
 
 const MarketDepth = () => {
+	StompService({
+		subscribeurl: '/user/topic/orderBook',
+		callback: (msg: string) => {
+			console.log('market depth get msg', msg);
+		},
+		sendurl: '/app/orderBook',
+		sendMsg: JSON.stringify({ futureName: 'GOLD' }),
+	});
+
 	return (
 		<React.Fragment>
 			<MaterialTable

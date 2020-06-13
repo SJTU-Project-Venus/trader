@@ -41,6 +41,8 @@ import {
 } from './pending/OrderFormCol';
 import MockData from './pending/MockData';
 import Alert from '@material-ui/lab/Alert';
+import StompService from '../../apis/Websocket';
+import store from '../../redux/store/Store';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -108,10 +110,19 @@ const Pending = () => {
 	const [pendingOrders, setPendingOrders] = React.useState<PendingOrderProps[]>(
 		[]
 	);
+	const {traderName} = store.getState().base.user
 
 	React.useEffect(() => {
 		setPendingOrders(MockData);
 	}, []);
+	StompService({
+		subscribeurl: '/user/topic/pendingOrder',
+		callback: (msg: string) => {
+			console.log('pending order get msg', msg);
+		},
+		sendMsg: JSON.stringify({ name: traderName }),
+		sendurl: '/app/pendingOrder',
+	});
 
 	const { control, register, handleSubmit, watch } = useForm<OrderFormProps>({
 		mode: 'onSubmit',
@@ -144,10 +155,17 @@ const Pending = () => {
 			<Snackbar
 				open={success}
 				autoHideDuration={6000}
-				onClose={() => {setSuccess(false)}}
+				onClose={() => {
+					setSuccess(false);
+				}}
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 			>
-				<Alert onClose={() => {setSuccess(false)}} severity='success'>
+				<Alert
+					onClose={() => {
+						setSuccess(false);
+					}}
+					severity='success'
+				>
 					发起成功
 				</Alert>
 			</Snackbar>

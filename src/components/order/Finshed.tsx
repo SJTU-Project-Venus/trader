@@ -7,7 +7,7 @@ import {
 	FirstPage,
 } from '@material-ui/icons';
 import OrderApi from '../../apis/OrderApi';
-import { StompService } from '../../apis/Websocket';
+import StompService from '../../apis/Websocket';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -143,8 +143,15 @@ const Finished = () => {
 		OrderApi.getHistory().then((res) => {
 			console.log('get history order', res);
 		});
-		const client = StompService().client;
 	}, []);
+
+	StompService({
+		subscribeurl: '/user/topic/orderBlotter',
+		sendurl: '/app/orderBlotter',
+		callback: (msg: string) => {
+			console.log('finished order get msg', msg);
+		},
+	});
 
 	return (
 		<React.Fragment>

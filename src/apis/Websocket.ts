@@ -1,38 +1,49 @@
+import { TRADER_WEBSOCKET } from './BaseUrlConfig';
 import Stomp from 'stompjs';
-import React from 'react';
+import store from '../redux/store/Store';
 
-export const StompService = () => {
-	const webSocketUrl = 'ws://localhost:8081/ws';
-	const webSocketGreetingsSubscribeEndpoint = '/user/topic/orderBlotter';
-	const webSocketGreetingsSendEndpoint = '/app/orderBlotter';
-	const client = Stomp.client(webSocketUrl);
+interface StompServiceProps {
+	url?: string;
+	subscribeurl: string;
+	sendurl?: string;
+	sendMsg?: string;
+	callback: (msg: string) => any;
+}
+
+const StompService = (props: StompServiceProps) => {
+	const {
+		url = TRADER_WEBSOCKET,
+		subscribeurl,
+		sendurl = '/app/orderBlotter',
+		callback,
+		sendMsg = JSON.stringify({ futureName: 'GOLD' }),
+	} = props;
+	const { userId } = store.getState().base.user;
+	// const webSocketUrl = 'ws://localhost:8081/ws';
+	// const webSocketGreetingsSubscribeEndpoint = '/user/topic/orderBlotter';
+	// const webSocketGreetingsSendEndpoint = '/app/orderBlotter';
+	const client = Stomp.client(url);
 
 	const connectionCallback = () => {
 		console.log('ws connect ok');
-		client.subscribe(webSocketGreetingsSubscribeEndpoint, (message) => {
+		client.subscribe(subscribeurl, (message) => {
 			console.log('subscribe ok');
 			if (message.body) {
-				alert('got message with body ' + message.body);
+				console.log('got message with body ', message.body);
 			} else {
-				alert('got empty message');
+				console.log('got empty message');
 			}
 		});
-		client.send(
-			webSocketGreetingsSendEndpoint,
-			{},
-			JSON.stringify({ futureName: 'GOLD' })
-		);
+		client.send(sendurl, {}, sendMsg);
 	};
 
 	const errorCallback = () => {
 		console.log('ws connect error');
 	};
 
-	client.connect('my', 'my', connectionCallback, errorCallback);
-	client.heartbeat.outgoing = 4000; // client will send heartbeats every 20000ms
-	client.heartbeat.incoming = 4000; // client does not want to receive heartbeats
-
-	return {
-		client: client,
-	};
+	client.connect(`${userId}`, `${userId}`, connectionCallback, errorCallback);
+	client.heartbeat.outgoing = 4000;
+	client.heartbeat.incoming = 4000;
 };
+
+export default StompService;
