@@ -29,7 +29,8 @@ const StompService = (props: StompServiceProps) => {
 		client.subscribe(subscribeurl, (message) => {
 			console.log('subscribe ok');
 			if (message.body) {
-				console.log('got message with body ', message.body);
+				//console.log('got message with body ', message.body);
+				callback(message.body)
 			} else {
 				console.log('got empty message');
 			}

@@ -6,135 +6,26 @@ import {
 	LastPage,
 	FirstPage,
 } from '@material-ui/icons';
+import StompService from '../../apis/Websocket';
+import { OrderBlotterProps } from '../../apis/OrderApi';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
 };
 
-interface Data {
-	orderId: number;
-	type: string;
-	broker: string;
-	product: string;
-	period: string;
-	price: number;
-	quantity: string;
-}
-
-const createData = (props: Data) => ({
-	orderId: props.orderId,
-	type: props.type,
-	broker: props.broker,
-	product: props.product,
-	period: props.period,
-	price: props.price,
-	quantity: props.quantity,
-});
-
-const data = [
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-];
-
 const Deals = () => {
+	const [data, setData] = React.useState<OrderBlotterProps[]>([]);
+
+	StompService({
+		subscribeurl: '/user/topic/orderBlotter',
+		sendurl: '/app/orderBlotter',
+		callback: (msg: string) => {
+			console.log(JSON.parse(msg) as OrderBlotterProps[])
+			setData(JSON.parse(msg) as OrderBlotterProps[]);
+		},
+	});
+
 	return (
 		<React.Fragment>
 			<MaterialTable
@@ -142,43 +33,61 @@ const Deals = () => {
 				columns={[
 					{
 						title: '订单编号',
-						field: 'orderId',
+						field: 'id',
 						sorting: false,
 						cellStyle: { ...cellStyle, borderLeft: '1px solid white' },
 					},
 					{
-						title: '订单类型',
-						field: 'type',
+						title: '中介公司',
+						field: 'brokerCompany',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: 'Broker',
-						field: 'broker',
+						title: '商品类型',
+						field: 'futureName',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '产品',
-						field: 'product',
+						title: '交易时间',
+						field: 'creationTime',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '时间',
-						field: 'period',
-						sorting: false,
-						cellStyle: cellStyle,
-					},
-					{
-						title: '价格',
+						title: '交易价格',
 						field: 'price',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '数量',
-						field: 'quantity',
+						title: '交易数量',
+						field: 'count',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '买方公司',
+						field: 'buyerTraderName',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '买方交易员',
+						field: 'buyerTraderDetailName',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '卖方公司',
+						field: 'sellerTraderName',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '卖方交易员',
+						field: 'sellerTraderDetailName',
 						sorting: false,
 						cellStyle: { ...cellStyle, borderRight: '1px solid white' },
 					},

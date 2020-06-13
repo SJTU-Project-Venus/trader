@@ -145,14 +145,6 @@ const Finished = () => {
 		});
 	}, []);
 
-	StompService({
-		subscribeurl: '/user/topic/orderBlotter',
-		sendurl: '/app/orderBlotter',
-		callback: (msg: string) => {
-			console.log('finished order get msg', msg);
-		},
-	});
-
 	return (
 		<React.Fragment>
 			<MaterialTable

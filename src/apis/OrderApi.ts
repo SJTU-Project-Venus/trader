@@ -62,6 +62,24 @@ export interface PendingOrderProps {
 	orderType: OrderType;
 }
 
+export interface OrderBlotterProps {
+	brokerCompany: string;
+	sellerTraderDetailName: string;
+	creationTime: string;
+	count: number;
+	futureName: string;
+	sellerTraderName: string;
+	marketDepthId: string;
+	buyerOtherId: string;
+	price: number;
+	sellerOtherId: string;
+	id: string;
+	buyerTraderName: string;
+	buyerOrderId: string;
+	sellerOrderId: string;
+	buyerTraderDetailName: string;
+}
+
 const BaseApi = axios.create({
 	baseURL: TRADER_BACKEND,
 	headers: {
