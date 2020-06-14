@@ -26,7 +26,7 @@ export interface TraderOrder {
 	traderName: string;
 	traderCompany: string;
 	brokerName: string;
-	Status: StatusType;
+	status: StatusType;
 
 	// Market Order 所拥有的
 	side?: SideType; // 买卖操作
@@ -73,6 +73,7 @@ export interface OrderBlotterProps {
 	marketDepthId: string;
 	buyerOtherId: string;
 	price: number;
+	pendingNumber: number;
 	sellerOtherId: string;
 	id: string;
 	buyerTraderName: string;

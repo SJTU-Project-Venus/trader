@@ -60,11 +60,6 @@ export const MarketOrderCols = (
 		name: 'number',
 		type: 'number',
 	},
-	{
-		label: '目标价格',
-		name: 'unitPrice',
-		type: 'number',
-	},
 ];
 
 export const LimitOrderCols = (

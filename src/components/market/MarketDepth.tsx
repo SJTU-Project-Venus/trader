@@ -59,8 +59,10 @@ const MarketDepth = () => {
 			subscribeurl: '/user/topic/orderBook',
 			callback: (msg: string) => {
 				console.log('market depth get msg', msg);
-				const data = JSON.parse(msg) as MarketDepthWS;
-				const { buyers, sellers } = data.marketDepth;
+				const data = JSON.parse(msg);
+				const marketDepth: any = JSON.parse(data.marketDepth);
+				const buyers: TradersProps[] = marketDepth.buyers as TradersProps[];
+				const sellers: TradersProps[] = marketDepth.sellers as TradersProps[];
 				const tmp: Data[] = [];
 				sellers.map((elem, index) => {
 					tmp.push({

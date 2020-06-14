@@ -12,7 +12,6 @@ export interface MarketOrderFormProps {
 	side: SideType; // 买卖操作
 	futureName: string; // 期货类型
 	number: number; // 数量
-	unitPrice: number; // 单价
 }
 
 export interface LimitOrderFormProps {
@@ -71,6 +70,22 @@ export interface OrderFormProps {
 	orderId?: number; // 撤销订单的Id号。
 }
 
+export interface HistoryOrderProps {
+	orderType: OrderType;
+	id: number;
+	traderName: string;
+	traderCompany: string;
+	brokerName: string;
+	status: StatusType;
+	side?: SideType; // 买卖操作
+	futureName?: string; // 期货类型
+	number?: number; // 数量
+	unitPrice?: number; // 单价
+	stopPrice?: number; // price 达到这个值的时候会转化
+	targetType?: OrderType; // 转化的类型
+	orderId?: number; // 撤销订单的Id号。
+}
+
 export const initialOrder: OrderFormProps = {
 	orderType: OrderType.MARKET,
 	brokerName: '',
@@ -97,9 +112,9 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				id: -1,
 				traderCompany: traderCompany,
 				traderName: traderName,
-				Status: StatusType.PENDING,
+				status: StatusType.PENDING,
 				number: tmpOrder.number,
-				unitPrice: tmpOrder.unitPrice,
+				pendingNumber: tmpOrder.number,
 			};
 			break;
 		}
@@ -110,8 +125,9 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				id: -1,
 				traderCompany: traderCompany,
 				traderName: traderName,
-				Status: StatusType.PENDING,
+				status: StatusType.PENDING,
 				number: tmpOrder.number,
+				pendingNumber: tmpOrder.number,
 				unitPrice: tmpOrder.unitPrice,
 			};
 
@@ -124,8 +140,9 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				id: -1,
 				traderCompany: traderCompany,
 				traderName: traderName,
-				Status: StatusType.PENDING,
+				status: StatusType.PENDING,
 				number: tmpOrder.number,
+				pendingNumber: tmpOrder.number,
 				unitPrice: tmpOrder.unitPrice,
 			};
 
@@ -138,7 +155,7 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 				id: -1,
 				traderCompany: traderCompany,
 				traderName: traderName,
-				Status: StatusType.CANCELPENDING,
+				status: StatusType.CANCELPENDING,
 			};
 
 			break;
