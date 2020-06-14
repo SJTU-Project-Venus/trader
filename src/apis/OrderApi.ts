@@ -60,6 +60,7 @@ export interface PendingOrderProps {
 	number: number;
 	futureName: string;
 	orderType: OrderType;
+	timestamp: number;
 }
 
 export interface OrderBlotterProps {

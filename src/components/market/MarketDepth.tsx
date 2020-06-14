@@ -21,87 +21,74 @@ interface Data {
 	price: number;
 }
 
-const data: Data[] = [
-	{
-		buyLevel: undefined,
-		buyVol: undefined,
-		sellLevel: 5,
-		sellVol: 100,
-		price: 1044,
-	},
-	{
-		buyLevel: undefined,
-		buyVol: undefined,
-		sellLevel: 4,
-		sellVol: 100,
-		price: 1043,
-	},
-	{
-		buyLevel: undefined,
-		buyVol: undefined,
-		sellLevel: 3,
-		sellVol: 100,
-		price: 1042,
-	},
-	{
-		buyLevel: undefined,
-		buyVol: undefined,
-		sellLevel: 2,
-		sellVol: 100,
-		price: 1041,
-	},
-	{
-		buyLevel: undefined,
-		buyVol: undefined,
-		sellLevel: 1,
-		sellVol: 100,
-		price: 1041,
-	},
-	{
-		buyLevel: 1,
-		buyVol: 100,
-		sellLevel: undefined,
-		sellVol: undefined,
-		price: 1035,
-	},
-	{
-		buyLevel: 2,
-		buyVol: 100,
-		sellLevel: undefined,
-		sellVol: undefined,
-		price: 1034,
-	},
-	{
-		buyLevel: 3,
-		buyVol: 100,
-		sellLevel: undefined,
-		sellVol: undefined,
-		price: 1033,
-	},
-	{
-		buyLevel: 4,
-		buyVol: 100,
-		sellLevel: undefined,
-		sellVol: undefined,
-		price: 1032,
-	},
-	{
-		buyLevel: 5,
-		buyVol: 100,
-		sellLevel: undefined,
-		sellVol: undefined,
-		price: 1031,
-	},
-];
+interface TradersProps {
+	price: number;
+	count: number;
+}
+
+interface MarketDepthWS {
+	marketQuotation: {
+		changePercent: any;
+		changePrice: number;
+		closePrice: number;
+		currentPrice: number;
+		currentTime: string;
+		date: string;
+		highPrice: number;
+		id: string;
+		lastClosePrice: number;
+		lowPrice: number;
+		marketDepthId: string;
+		openPrice: number;
+	};
+	marketDepth: {
+		buyers: TradersProps[];
+		id: string;
+		sellers: TradersProps[];
+	};
+	marketDepthId: string;
+	timestamp: number;
+	futureName: string;
+}
 
 const MarketDepth = () => {
-	StompService({
-		subscribeurl: '/user/topic/orderBook',
-		callback: (msg: string) => {
-			console.log('market depth get msg', msg);
-		},
-		sendurl: '/app/orderBook',
-		sendMsg: JSON.stringify({ futureName: 'GOLD' }),
+	const [data, setData] = React.useState<Data[]>([]);
+
+	React.useEffect(() => {
+		const disconnect = StompService({
+			subscribeurl: '/user/topic/orderBook',
+			callback: (msg: string) => {
+				console.log('market depth get msg', msg);
+				const data = JSON.parse(msg) as MarketDepthWS;
+				const { buyers, sellers } = data.marketDepth;
+				const tmp: Data[] = [];
+				sellers.map((elem, index) => {
+					tmp.push({
+						buyLevel: undefined,
+						buyVol: undefined,
+						price: elem.price,
+						sellVol: elem.count,
+						sellLevel: index + 1,
+					});
+					return 0;
+				});
+				buyers.map((elem, index) => {
+					tmp.push({
+						sellLevel: undefined,
+						sellVol: undefined,
+						price: elem.price,
+						buyVol: elem.count,
+						buyLevel: index + 1,
+					});
+					return 0;
+				});
+				setData(tmp);
+			},
+			sendurl: '/app/orderBook',
+			sendMsg: JSON.stringify({ futureName: 'GOLD' }),
+		});
+
+		return disconnect;
 	});
 
 	return (

@@ -39,7 +39,6 @@ import {
 	StopOrderCols,
 	CancelOrderCols,
 } from './pending/OrderFormCol';
-import MockData from './pending/MockData';
 import Alert from '@material-ui/lab/Alert';
 import StompService from '../../apis/Websocket';
 import store from '../../redux/store/Store';
@@ -110,25 +109,27 @@ const Pending = () => {
 	const [pendingOrders, setPendingOrders] = React.useState<PendingOrderProps[]>(
 		[]
 	);
-	const {traderName} = store.getState().base.user
+	const { traderName } = store.getState().base.user;
 
 	React.useEffect(() => {
-		setPendingOrders(MockData);
+		const disconnect = StompService({
+			subscribeurl: '/user/topic/pendingOrder',
+			callback: (msg: string) => {
+				console.log('pending order get msg', msg);
+				const data = JSON.parse(msg) as PendingOrderProps[];
+				console.log('pending order parsed', data);
+				setPendingOrders(data);
+			},
+			sendMsg: JSON.stringify({ name: traderName }),
+			sendurl: '/app/pendingOrder',
+		});
+		return disconnect;
 	}, []);
-	StompService({
-		subscribeurl: '/user/topic/pendingOrder',
-		callback: (msg: string) => {
-			console.log('pending order get msg', msg);
-		},
-		sendMsg: JSON.stringify({ name: traderName }),
-		sendurl: '/app/pendingOrder',
-	});
 
 	const { control, register, handleSubmit, watch } = useForm<OrderFormProps>({
 		mode: 'onSubmit',
 		defaultValues: Object.assign({}, initialOrder),
 	});
-
 	const values = watch();
 
 	const onSubmit = (data: OrderFormProps) => {

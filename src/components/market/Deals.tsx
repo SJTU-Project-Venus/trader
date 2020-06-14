@@ -17,14 +17,18 @@ const cellStyle = {
 const Deals = () => {
 	const [data, setData] = React.useState<OrderBlotterProps[]>([]);
 
-	StompService({
-		subscribeurl: '/user/topic/orderBlotter',
-		sendurl: '/app/orderBlotter',
-		callback: (msg: string) => {
-			console.log(JSON.parse(msg) as OrderBlotterProps[])
-			setData(JSON.parse(msg) as OrderBlotterProps[]);
-		},
-	});
+	React.useEffect(() => {
+		const disconnect = StompService({
+			subscribeurl: '/user/topic/orderBlotter',
+			sendurl: '/app/orderBlotter',
+			callback: (msg: string) => {
+				console.log(JSON.parse(msg) as OrderBlotterProps[]);
+				setData(JSON.parse(msg) as OrderBlotterProps[]);
+			},
+		});
+
+		return disconnect;
+	}, []);
 
 	return (
 		<React.Fragment>

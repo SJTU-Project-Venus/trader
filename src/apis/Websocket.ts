@@ -30,7 +30,7 @@ const StompService = (props: StompServiceProps) => {
 			console.log('subscribe ok');
 			if (message.body) {
 				//console.log('got message with body ', message.body);
-				callback(message.body)
+				callback(message.body);
 			} else {
 				console.log('got empty message');
 			}
@@ -45,6 +45,11 @@ const StompService = (props: StompServiceProps) => {
 	client.connect(`${userId}`, `${userId}`, connectionCallback, errorCallback);
 	client.heartbeat.outgoing = 4000;
 	client.heartbeat.incoming = 4000;
+
+	return () =>
+		client.disconnect(() => {
+			console.log('disconnect ws');
+		});
 };
 
 export default StompService;
