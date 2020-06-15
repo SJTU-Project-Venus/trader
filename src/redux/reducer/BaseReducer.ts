@@ -1,8 +1,11 @@
 import { AnyAction } from 'redux';
 import ActionTypes from '../action/ActionTypes';
-import initialReduxState from './ReduxState';
+import initialReduxState, { BaseReducerStateProps } from './ReduxState';
 
-const baseReducer = (state = initialReduxState.base, action: AnyAction) => {
+const baseReducer = (
+	state = initialReduxState.base,
+	action: AnyAction
+): BaseReducerStateProps => {
 	switch (action.type) {
 		case ActionTypes.LOGIN: {
 			return {
@@ -12,6 +15,12 @@ const baseReducer = (state = initialReduxState.base, action: AnyAction) => {
 		}
 		case ActionTypes.LOGOUT: {
 			return { ...initialReduxState.base };
+		}
+		case ActionTypes.SETWSID: {
+			return {
+				...state,
+				wsId: action.wsId,
+			};
 		}
 		default: {
 			return state;

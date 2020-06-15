@@ -1,3 +1,4 @@
+import Stomp from 'stompjs';
 export interface LoginUserProps {
 	userId: string;
 	traderName: string;
@@ -16,6 +17,7 @@ export interface UserProps {
 
 export interface BaseReducerStateProps {
 	user: UserProps;
+	wsId: Stomp.Subscription | null;
 }
 
 export interface ReduxState {
@@ -31,6 +33,7 @@ const initialReduxState: ReduxState = {
 			login: false,
 			access_token: '',
 		},
+		wsId: null,
 	},
 };
 

@@ -1,6 +1,7 @@
 enum ActionTypes {
-  LOGIN = 'LOGIN',
-  LOGOUT = 'LOGOUT'
+	LOGIN = 'LOGIN',
+	LOGOUT = 'LOGOUT',
+	SETWSID = 'SETWSID',
 }
 
-export default ActionTypes
+export default ActionTypes;

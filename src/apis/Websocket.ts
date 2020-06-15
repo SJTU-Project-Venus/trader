@@ -1,6 +1,7 @@
 import { TRADER_WEBSOCKET } from './BaseUrlConfig';
 import Stomp from 'stompjs';
 import store from '../redux/store/Store';
+import BaseAction from '../redux/action/BaseAction';
 
 interface StompServiceProps {
 	url?: string;
@@ -24,7 +25,7 @@ const StompService = (props: StompServiceProps) => {
 
 	const connectionCallback = () => {
 		console.log('ws connect ok');
-		client.subscribe(subscribeurl, (message) => {
+		const subId = client.subscribe(subscribeurl, (message) => {
 			console.log('subscribe ok');
 			if (message.body) {
 				//console.log('got message with body ', message.body);
@@ -33,6 +34,7 @@ const StompService = (props: StompServiceProps) => {
 				console.log('got empty message');
 			}
 		});
+		store.dispatch(BaseAction.setWSId(subId));
 		client.send(sendurl, {}, sendMsg);
 	};
 
@@ -44,10 +46,21 @@ const StompService = (props: StompServiceProps) => {
 	client.heartbeat.outgoing = 4000;
 	client.heartbeat.incoming = 4000;
 
-	return () =>
-		client.disconnect(() => {
-			console.log('disconnect ws');
-		});
+	const res = {
+		disconnect: () =>
+			client.disconnect(() => {
+				console.log('disconnect ws');
+			}),
+		unsubscribe: () => {
+			const wsId = store.getState().base.wsId
+			if (wsId) {
+				wsId.unsubscribe()
+				store.dispatch(BaseAction.setWSId(null));
+			}
+		},
+	};
+
+	return res;
 };
 
 export default StompService;

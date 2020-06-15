@@ -11,27 +11,14 @@ import { OrderBlotterProps } from '../../apis/OrderApi';
 import {
 	Grid,
 	FormControl,
-	Select,
-	FormHelperText,
-	MenuItem,
-	makeStyles,
-	Theme,
-	createStyles,
 	Typography,
+	RadioGroup,
+	FormLabel,
+	FormControlLabel,
+	Radio,
 } from '@material-ui/core';
 import { FutureNames } from '../order/pending/OrderFormCol';
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		formControl: {
-			margin: theme.spacing(1),
-			minWidth: 150,
-		},
-		selectEmpty: {
-			marginTop: theme.spacing(2),
-		},
-	})
-);
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -40,7 +27,6 @@ const cellStyle = {
 };
 
 const Deals = () => {
-	const classes = useStyles();
 	const [data, setData] = React.useState<OrderBlotterProps[]>([]);
 	const [futureName, setFutureName] = React.useState<string>('OIL-SEP22');
 
@@ -55,7 +41,7 @@ const Deals = () => {
 			sendMsg: JSON.stringify({ futureName: futureName }),
 		});
 
-		return disconnect;
+		return disconnect.disconnect;
 	}, [futureName]);
 
 	return (
@@ -69,27 +55,32 @@ const Deals = () => {
 								<Grid item xs={2}>
 									<Typography variant='h5'>{'最近交易单'}</Typography>
 								</Grid>
-								<Grid item xs={3}>
-									<FormControl className={classes.formControl}>
-										<Select
+								<Grid item xs={8}>
+									<FormControl component='fieldset'>
+										<FormLabel component='legend'>选择交易商品</FormLabel>
+										<RadioGroup
+											row
+											aria-label='position'
+											name='position'
 											value={futureName}
-											onChange={(e: any) => {
-												const name = e.target.value as string;
-												setFutureName(name);
+											onChange={(
+												event: React.ChangeEvent<HTMLInputElement>
+											) => {
+												setFutureName((event.target as HTMLInputElement).value);
 											}}
-											displayEmpty
-											inputProps={{ 'aria-label': 'Without label' }}
-											fullWidth={true}
 										>
 											{FutureNames.map((elem, index) => {
 												return (
-													<MenuItem value={elem} key={`${index}`}>
-														{elem}
-													</MenuItem>
+													<FormControlLabel
+														key={`${index}`}
+														value={elem}
+														control={<Radio color='primary' />}
+														label={elem}
+														labelPlacement='top'
+													/>
 												);
 											})}
-										</Select>
-										<FormHelperText>{'选择交易商品名称'}</FormHelperText>
+										</RadioGroup>
 									</FormControl>
 								</Grid>
 							</Grid>
