@@ -11,8 +11,9 @@ interface StompServiceProps {
 }
 
 const StompService = (props: StompServiceProps) => {
+	const { traderCompany } = store.getState().base.user;
 	const {
-		url = TRADER_WEBSOCKET,
+		url = TRADER_WEBSOCKET + '/' + traderCompany + '/ws',
 		subscribeurl,
 		sendurl,
 		callback,

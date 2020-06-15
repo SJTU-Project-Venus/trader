@@ -22,10 +22,13 @@ export const BaseApi = axios.create({
 
 const UserApi = {
 	register: (data: RegisterProps) => {
-		return BaseApi.post('/traderUser/register', data);
+		return BaseApi.post(
+			'/' + data.traderCompony + '/traderUser/register',
+			data
+		);
 	},
 	login: (data: LoginProps) => {
-		return BaseApi.get('/oauth/token', {
+		return BaseApi.get('/' + data.traderCompany + '/oauth/token', {
 			params: {
 				...data,
 				grant_type: 'password',

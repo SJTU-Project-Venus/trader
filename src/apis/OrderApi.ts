@@ -91,20 +91,28 @@ const BaseApi = axios.create({
 
 const OrderApi = {
 	createOrder: (order: TraderOrder) => {
-		return BaseApi.post('/order/create', order, {
+		const { traderCompany } = store.getState().base.user;
+		return BaseApi.post('/' + traderCompany.concat('/order/create'), order, {
 			params: {
 				access_token: store.getState().base.user.access_token,
 			},
 		});
 	},
 	getHistory: () => {
-		const { traderName, access_token } = store.getState().base.user;
+		const {
+			traderName,
+			access_token,
+			traderCompany,
+		} = store.getState().base.user;
 
-		return BaseApi.get('/order/history/'.concat(traderName), {
-			params: {
-				access_token: access_token,
-			},
-		});
+		return BaseApi.get(
+			'/' + traderCompany.concat('/order/history/').concat(traderName),
+			{
+				params: {
+					access_token: access_token,
+				},
+			}
+		);
 	},
 };
 
