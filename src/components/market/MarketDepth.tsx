@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
+	lineHeight: 0.2,
 };
 
 interface Data {
@@ -82,47 +83,59 @@ const MarketDepth = () => {
 	const [futureName, setFutureName] = React.useState<string>('OIL-SEP22');
 	const [currentPrice, setCurrentPrice] = React.useState<number | null>(null);
 
-	React.useEffect(() => {
-		const disconnect = StompService({
-			subscribeurl: '/user/topic/orderBook',
-			callback: (msg: string) => {
-				console.log('market depth get msg', msg);
-				const data = JSON.parse(msg);
-				const marketQuotation: any = JSON.parse(data.marketQuotation);
-				setCurrentPrice(marketQuotation.currentPrice);
-				const marketDepth: any = JSON.parse(data.marketDepth);
-				const buyers: TradersProps[] = marketDepth.buyers as TradersProps[];
-				const sellers: TradersProps[] = marketDepth.sellers as TradersProps[];
-				const tmp: Data[] = [];
-				const len = sellers.length;
-				sellers.reverse().map((elem, index) => {
-					tmp.push({
-						buyLevel: undefined,
-						buyVol: undefined,
-						price: elem.price,
-						sellVol: elem.count,
-						sellLevel: len - index,
-					});
-					return 0;
-				});
-				buyers.map((elem, index) => {
-					tmp.push({
-						sellLevel: undefined,
-						sellVol: undefined,
-						price: elem.price,
-						buyVol: elem.count,
-						buyLevel: index + 1,
-					});
-					return 0;
-				});
-				setData(tmp);
-			},
-			sendurl: '/app/orderBook',
-			sendMsg: JSON.stringify({ futureName: futureName, brokerName: broker }),
-		});
+	// React.useEffect(() => {
+	// 	const disconnect = StompService({
+	// 		subscribeurl: '/user/topic/orderBook',
+	// 		callback: (msg: string) => {
+	// 			console.log('market depth get msg', msg);
+	// 			const data = JSON.parse(msg);
+	// 			const marketQuotation: any = JSON.parse(data.marketQuotation);
+	// 			setCurrentPrice(marketQuotation.currentPrice);
+	// 			const marketDepth: any = JSON.parse(data.marketDepth);
+	// 			const buyers: TradersProps[] = marketDepth.buyers as TradersProps[];
+	// 			const sellers: TradersProps[] = marketDepth.sellers as TradersProps[];
+	// 			const tmp: Data[] = [];
+	// 			const len = sellers.length;
+	// 			sellers.reverse().map((elem, index) => {
+	// 				tmp.push({
+	// 					buyLevel: undefined,
+	// 					buyVol: undefined,
+	// 					price: elem.price,
+	// 					sellVol: elem.count,
+	// 					sellLevel: len - index,
+	// 				});
+	// 				return 0;
+	// 			});
+	// 			buyers.map((elem, index) => {
+	// 				tmp.push({
+	// 					sellLevel: undefined,
+	// 					sellVol: undefined,
+	// 					price: elem.price,
+	// 					buyVol: elem.count,
+	// 					buyLevel: index + 1,
+	// 				});
+	// 				return 0;
+	// 			});
+	// 			setData(tmp);
+	// 		},
+	// 		sendurl: '/app/orderBook',
+	// 		sendMsg: JSON.stringify({ futureName: futureName, brokerName: broker }),
+	// 	});
 
-		return disconnect;
-	}, [broker, futureName, currentPrice]);
+	// 	return disconnect;
+	// }, [broker, futureName, currentPrice]);
+
+	React.useEffect(() => {
+		setData([
+			{
+				sellLevel: undefined,
+				sellVol: undefined,
+				price: 100,
+				buyVol: 100,
+				buyLevel: 1,
+			},
+		]);
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -182,9 +195,9 @@ const MarketDepth = () => {
 									</FormControl>
 								</Grid>
 								<Grid item xs={2}>
-									<Typography
-										variant={'h6'}
-									>{`目前市场价: ${currentPrice}`}</Typography>
+									<Typography variant={'h6'}>{`目前市场价: ${
+										currentPrice ? currentPrice : '无'
+									}`}</Typography>
 								</Grid>
 							</Grid>
 						</React.Fragment>
@@ -232,6 +245,7 @@ const MarketDepth = () => {
 					headerStyle: {
 						backgroundColor: 'rgb(248,248,248)',
 					},
+					paging: false,
 				}}
 				icons={{
 					NextPage: React.forwardRef((props, ref) => {

@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
+	width: '7%',
 };
 
 const Deals = () => {
@@ -97,16 +98,10 @@ const Deals = () => {
 				}}
 				columns={[
 					{
-						title: '订单编号',
-						field: 'id',
-						sorting: false,
-						cellStyle: { ...cellStyle, borderLeft: '1px solid white' },
-					},
-					{
 						title: '中介公司',
 						field: 'brokerCompany',
 						sorting: false,
-						cellStyle: cellStyle,
+						cellStyle: { ...cellStyle, borderLeft: '1px solid white' },
 					},
 					{
 						title: '商品类型',
@@ -118,7 +113,7 @@ const Deals = () => {
 						title: '交易时间',
 						field: 'creationTime',
 						sorting: false,
-						cellStyle: cellStyle,
+						cellStyle: { ...cellStyle, width: '15%' },
 					},
 					{
 						title: '交易价格',
