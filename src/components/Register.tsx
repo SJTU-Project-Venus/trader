@@ -11,10 +11,13 @@ import {
 	CardContent,
 	CardActions,
 	Snackbar,
+	FormControl,
+	InputLabel,
+	MenuItem,
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField, Select } from 'formik-material-ui';
 import { useHistory } from 'react-router';
 import UserApi, { RegisterProps } from '../apis/UserApi';
 import Alert from '@material-ui/lab/Alert';
@@ -88,12 +91,25 @@ const Register = () => {
 							<CardContent>
 								<Grid container direction='column'>
 									<Field component={TextField} label='手机号' name='phone' />
-									<Field component={TextField} label='密码' name='password' />
 									<Field
 										component={TextField}
-										label='所属公司'
-										name='traderCompony'
+										label='密码'
+										name='password'
+										type='password'
 									/>
+									<FormControl>
+										<InputLabel htmlFor='company'>公司</InputLabel>
+										<Field
+											component={Select}
+											name='traderCompony'
+											inputProps={{
+												id: 'company',
+											}}
+										>
+											<MenuItem value={'A'}>A</MenuItem>
+											<MenuItem value={'B'}>B</MenuItem>
+										</Field>
+									</FormControl>
 								</Grid>
 							</CardContent>
 

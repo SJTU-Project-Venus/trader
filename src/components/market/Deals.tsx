@@ -8,6 +8,30 @@ import {
 } from '@material-ui/icons';
 import StompService from '../../apis/Websocket';
 import { OrderBlotterProps } from '../../apis/OrderApi';
+import {
+	Grid,
+	FormControl,
+	Select,
+	FormHelperText,
+	MenuItem,
+	makeStyles,
+	Theme,
+	createStyles,
+	Typography,
+} from '@material-ui/core';
+import { FutureNames } from '../order/pending/OrderFormCol';
+
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		formControl: {
+			margin: theme.spacing(1),
+			minWidth: 150,
+		},
+		selectEmpty: {
+			marginTop: theme.spacing(2),
+		},
+	})
+);
 
 const cellStyle = {
 	borderRight: '1px solid grey',
@@ -15,7 +39,9 @@ const cellStyle = {
 };
 
 const Deals = () => {
+	const classes = useStyles();
 	const [data, setData] = React.useState<OrderBlotterProps[]>([]);
+	const [futureName, setFutureName] = React.useState<string>('OIL-SEP22');
 
 	React.useEffect(() => {
 		const disconnect = StompService({
@@ -25,15 +51,50 @@ const Deals = () => {
 				console.log(JSON.parse(msg) as OrderBlotterProps[]);
 				setData(JSON.parse(msg) as OrderBlotterProps[]);
 			},
+			sendMsg: JSON.stringify({ futureName: futureName }),
 		});
 
 		return disconnect;
-	}, []);
+	}, [futureName]);
 
 	return (
 		<React.Fragment>
 			<MaterialTable
 				title='最近交易单'
+				components={{
+					Toolbar: () => (
+						<React.Fragment>
+							<Grid container>
+								<Grid item xs={2}>
+									<Typography variant='h5'>{'市场纵深'}</Typography>
+								</Grid>
+								<Grid item xs={3}>
+									<FormControl className={classes.formControl}>
+										<Select
+											value={futureName}
+											onChange={(e: any) => {
+												const name = e.target.value as string;
+												setFutureName(name);
+											}}
+											displayEmpty
+											inputProps={{ 'aria-label': 'Without label' }}
+											fullWidth={true}
+										>
+											{FutureNames.map((elem, index) => {
+												return (
+													<MenuItem value={elem} key={`${index}`}>
+														{elem}
+													</MenuItem>
+												);
+											})}
+										</Select>
+										<FormHelperText>{'选择交易商品名称'}</FormHelperText>
+									</FormControl>
+								</Grid>
+							</Grid>
+						</React.Fragment>
+					),
+				}}
 				columns={[
 					{
 						title: '订单编号',

@@ -10,6 +10,7 @@ export interface RegisterProps {
 export interface LoginProps {
 	username: string;
 	password: string;
+	traderCompany: string;
 }
 
 export const BaseApi = axios.create({

@@ -5,8 +5,14 @@ import {
 	SelectDataFormat,
 } from './../../utils/HookComponents';
 
-export const BrokerNames = ['M', 'T'];
-export const FutureNames = ['GOLD', 'OIL'];
+export const BrokerNames = ['M', 'N'];
+export const FutureNames = [
+	'OIL-SEP22',
+	'OIL-MAR01',
+	'GOLD-JUN18',
+	'GOLD-FEB22',
+	'GOLD-SEP13',
+];
 
 export interface OrderColmuns {
 	label: string;

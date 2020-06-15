@@ -64,6 +64,13 @@ const columns: Column<PendingOrderProps>[] = [
 		editable: 'never',
 	},
 	{
+		title: '中介公司',
+		field: 'brokerName',
+		sorting: false,
+		cellStyle: cellStyle,
+		editable: 'never',
+	},
+	{
 		title: '产品',
 		field: 'futureName',
 		sorting: false,

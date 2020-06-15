@@ -6,142 +6,20 @@ import {
 	LastPage,
 	FirstPage,
 } from '@material-ui/icons';
-import OrderApi from '../../apis/OrderApi';
-import StompService from '../../apis/Websocket';
+import OrderApi, { TraderOrder } from '../../apis/OrderApi';
 
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
 };
 
-interface Data {
-	orderId: number;
-	type: string;
-	broker: string;
-	product: string;
-	period: string;
-	price: number;
-	quantity: string;
-}
-
-const createData = (props: Data) => ({
-	orderId: props.orderId,
-	type: props.type,
-	broker: props.broker,
-	product: props.product,
-	period: props.period,
-	price: props.price,
-	quantity: props.quantity,
-});
-
-const data = [
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-	createData({
-		orderId: 0,
-		type: 'Limit',
-		broker: 'M',
-		product: 'Gold Swaps',
-		period: 'SEP20',
-		price: 123,
-		quantity: '50',
-	}),
-];
-
 const Finished = () => {
-	const [finishedOrder, setFinishedOrder] = React.useState(data);
+	const [finishedOrder, setFinishedOrder] = React.useState<TraderOrder[]>([]);
 
 	React.useEffect(() => {
 		OrderApi.getHistory().then((res) => {
 			console.log('get history order', res);
+			setFinishedOrder(res.data);
 		});
 	}, []);
 
@@ -152,43 +30,67 @@ const Finished = () => {
 				columns={[
 					{
 						title: '订单编号',
-						field: 'orderId',
+						field: 'id',
 						sorting: false,
 						cellStyle: { ...cellStyle, borderLeft: '1px solid white' },
 					},
 					{
 						title: '订单类型',
-						field: 'type',
+						field: 'orderType',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: 'Broker',
-						field: 'broker',
+						title: '中介公司',
+						field: 'brokerName',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '产品',
-						field: 'product',
+						title: '交易员',
+						field: 'traderName',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '时间',
-						field: 'period',
+						title: '交易方式',
+						field: 'side',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '价格',
-						field: 'price',
+						title: '期货类型',
+						field: 'futureName',
 						sorting: false,
 						cellStyle: cellStyle,
 					},
 					{
-						title: '数量',
-						field: 'quantity',
+						title: '交易数量',
+						field: 'number',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '交易单价',
+						field: 'unitPrice',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '转化价格',
+						field: 'stopPrice',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '转化类型',
+						field: 'targetType',
+						sorting: false,
+						cellStyle: cellStyle,
+					},
+					{
+						title: '撤销订单号',
+						field: 'orderId',
 						sorting: false,
 						cellStyle: { ...cellStyle, borderRight: '1px solid white' },
 					},

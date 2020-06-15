@@ -5,8 +5,8 @@ import store from '../redux/store/Store';
 interface StompServiceProps {
 	url?: string;
 	subscribeurl: string;
-	sendurl?: string;
-	sendMsg?: string;
+	sendurl: string;
+	sendMsg: string;
 	callback: (msg: string) => any;
 }
 
@@ -14,14 +14,11 @@ const StompService = (props: StompServiceProps) => {
 	const {
 		url = TRADER_WEBSOCKET,
 		subscribeurl,
-		sendurl = '/app/orderBlotter',
+		sendurl,
 		callback,
-		sendMsg = JSON.stringify({ futureName: 'GOLD' }),
+		sendMsg,
 	} = props;
 	const { userId } = store.getState().base.user;
-	// const webSocketUrl = 'ws://localhost:8081/ws';
-	// const webSocketGreetingsSubscribeEndpoint = '/user/topic/orderBlotter';
-	// const webSocketGreetingsSendEndpoint = '/app/orderBlotter';
 	const client = Stomp.client(url);
 
 	const connectionCallback = () => {

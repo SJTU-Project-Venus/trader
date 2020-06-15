@@ -10,10 +10,13 @@ import {
 	Card,
 	CardContent,
 	CardActions,
+	FormControl,
+	MenuItem,
+	InputLabel,
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { Formik, Form, Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField, Select } from 'formik-material-ui';
 import { useHistory } from 'react-router';
 import store from '../redux/store/Store';
 import BaseAction from '../redux/action/BaseAction';
@@ -30,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const initialValues: LoginProps = {
 	username: '',
 	password: '',
+	traderCompany: '',
 };
 
 const Login = () => {
@@ -49,7 +53,7 @@ const Login = () => {
 								BaseAction.login({
 									userId: userId,
 									traderName: values.username,
-									traderCompany: 'A',
+									traderCompany: values.traderCompany,
 									login: true,
 									access_token: access_token,
 								})
@@ -76,7 +80,20 @@ const Login = () => {
 							<CardContent>
 								<Grid container direction='column'>
 									<Field component={TextField} label='手机号' name='username' />
-									<Field component={TextField} label='密码' name='password' />
+									<Field component={TextField} label='密码' name='password' type='password' />
+									<FormControl>
+										<InputLabel htmlFor='company'>公司</InputLabel>
+										<Field
+											component={Select}
+											name='traderCompany'
+											inputProps={{
+												id: 'company',
+											}}
+										>
+											<MenuItem value={'A'}>A</MenuItem>
+											<MenuItem value={'B'}>B</MenuItem>
+										</Field>
+									</FormControl>
 								</Grid>
 							</CardContent>
 

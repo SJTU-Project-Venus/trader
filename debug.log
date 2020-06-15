@@ -1,2 +1,5 @@
 [0614/215214.882:ERROR:process_info.cc(359)] UncheckedAllocate
 [0614/215236.146:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
+[0615/090039.984:ERROR:process_info.cc(359)] UncheckedAllocate
+[0615/090040.178:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
+[0615/103353.147:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
