@@ -20,7 +20,6 @@ import {
 import { useForm } from 'react-hook-form';
 import {
 	initialOrder,
-	OrderTypeNameArray,
 	OrderTypeArray,
 	OrderFormProps,
 	processOrderFormData,
@@ -131,7 +130,7 @@ const Pending = () => {
 			sendurl: '/app/pendingOrder',
 		});
 		return disconnect;
-	}, []);
+	}, [traderName]);
 
 	const { control, register, handleSubmit, watch } = useForm<OrderFormProps>({
 		mode: 'onSubmit',

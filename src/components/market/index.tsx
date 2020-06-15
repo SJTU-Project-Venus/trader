@@ -4,9 +4,6 @@ import {
 	createStyles,
 	Container,
 	Paper,
-	Tab,
-	Box,
-	Tabs,
 } from '@material-ui/core';
 import MarketDepth from './MarketDepth';
 import Deals from './Deals';

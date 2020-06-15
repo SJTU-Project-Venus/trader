@@ -18,7 +18,6 @@ import {
 import { AccountCircle } from '@material-ui/icons';
 import { Formik, Form, Field } from 'formik';
 import { TextField, Select } from 'formik-material-ui';
-import { useHistory } from 'react-router';
 import UserApi, { RegisterProps } from '../apis/UserApi';
 import Alert from '@material-ui/lab/Alert';
 
@@ -43,7 +42,6 @@ const initialValues: RegisterProps = {
 
 const Register = () => {
 	const classes = useStyles();
-	const history = useHistory();
 	const [open, setOpen] = React.useState<boolean>(false);
 
 	const handleClose = () => {

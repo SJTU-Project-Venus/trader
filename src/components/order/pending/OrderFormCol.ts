@@ -1,5 +1,5 @@
 import { SideType } from './../../../apis/OrderApi';
-import { OrderTypeNameArray, TargetTypeArray } from './OrderInterfaces';
+import { TargetTypeArray } from './OrderInterfaces';
 import {
 	HookComponentsType,
 	SelectDataFormat,

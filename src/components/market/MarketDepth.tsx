@@ -80,6 +80,7 @@ const MarketDepth = () => {
 	const [data, setData] = React.useState<Data[]>([]);
 	const [broker, setBroker] = React.useState<string>('M');
 	const [futureName, setFutureName] = React.useState<string>('OIL-SEP22');
+	const [currentPrice, setCurrentPrice] = React.useState<number | null>(null);
 
 	React.useEffect(() => {
 		const disconnect = StompService({
@@ -87,6 +88,8 @@ const MarketDepth = () => {
 			callback: (msg: string) => {
 				console.log('market depth get msg', msg);
 				const data = JSON.parse(msg);
+				const marketQuotation: any = JSON.parse(data.marketQuotation);
+				setCurrentPrice(marketQuotation.currentPrice);
 				const marketDepth: any = JSON.parse(data.marketDepth);
 				const buyers: TradersProps[] = marketDepth.buyers as TradersProps[];
 				const sellers: TradersProps[] = marketDepth.sellers as TradersProps[];
@@ -119,7 +122,7 @@ const MarketDepth = () => {
 		});
 
 		return disconnect;
-	}, [broker, futureName]);
+	}, [broker, futureName, currentPrice]);
 
 	return (
 		<React.Fragment>
@@ -175,8 +178,13 @@ const MarketDepth = () => {
 												);
 											})}
 										</Select>
-										<FormHelperText>{'   选择交易商品名称   '}</FormHelperText>
+										<FormHelperText>{'选择交易商品名称'}</FormHelperText>
 									</FormControl>
+								</Grid>
+								<Grid item xs={2}>
+									<Typography
+										variant={'h6'}
+									>{`目前市场价: ${currentPrice}`}</Typography>
 								</Grid>
 							</Grid>
 						</React.Fragment>
@@ -199,7 +207,7 @@ const MarketDepth = () => {
 						title: '价格',
 						field: 'price',
 						sorting: false,
-						cellStyle: cellStyle,
+						cellStyle: { ...cellStyle, backgroundColor: 'yellow' },
 					},
 					{
 						title: '卖方数量',

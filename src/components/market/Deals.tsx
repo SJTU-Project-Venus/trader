@@ -66,7 +66,7 @@ const Deals = () => {
 						<React.Fragment>
 							<Grid container>
 								<Grid item xs={2}>
-									<Typography variant='h5'>{'市场纵深'}</Typography>
+									<Typography variant='h5'>{'最近交易单'}</Typography>
 								</Grid>
 								<Grid item xs={3}>
 									<FormControl className={classes.formControl}>
