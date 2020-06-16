@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core';
 import { FutureNames } from '../order/pending/OrderFormCol';
 
-
 const cellStyle = {
 	borderRight: '1px solid grey',
 	borderLeft: '1px solid grey',
@@ -39,9 +38,10 @@ const Deals = () => {
 				setData(JSON.parse(msg) as OrderBlotterProps[]);
 			},
 			sendMsg: JSON.stringify({ futureName: futureName }),
+			name: 'DEALS',
 		});
 
-		return disconnect.disconnect;
+		return disconnect;
 	}, [futureName]);
 
 	return (

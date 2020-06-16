@@ -128,8 +128,9 @@ const Pending = () => {
 			},
 			sendMsg: JSON.stringify({ name: traderName }),
 			sendurl: '/app/pendingOrder',
+			name: 'PENDING',
 		});
-		return disconnect.disconnect;
+		return disconnect;
 	}, [traderName]);
 
 	const { control, register, handleSubmit, watch } = useForm<OrderFormProps>({

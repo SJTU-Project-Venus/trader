@@ -4,4 +4,6 @@ enum ActionTypes {
 	SETWSID = 'SETWSID',
 }
 
+export type WsTypes = 'MARKETDEPTH' | 'PENDING' | 'DEALS';
+
 export default ActionTypes;

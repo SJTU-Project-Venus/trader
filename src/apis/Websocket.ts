@@ -1,3 +1,4 @@
+import { WsTypes } from './../redux/action/ActionTypes';
 import { TRADER_WEBSOCKET } from './BaseUrlConfig';
 import Stomp from 'stompjs';
 import store from '../redux/store/Store';
@@ -9,6 +10,8 @@ interface StompServiceProps {
 	sendurl: string;
 	sendMsg: string;
 	callback: (msg: string) => any;
+	name: WsTypes;
+	future?: string;
 }
 
 const StompService = (props: StompServiceProps) => {
@@ -19,6 +22,8 @@ const StompService = (props: StompServiceProps) => {
 		sendurl,
 		callback,
 		sendMsg,
+		name,
+		future,
 	} = props;
 	const { userId } = store.getState().base.user;
 	const client = Stomp.client(url);
@@ -27,6 +32,7 @@ const StompService = (props: StompServiceProps) => {
 		console.log('ws connect ok');
 		const subId = client.subscribe(subscribeurl, (message) => {
 			console.log('subscribe ok');
+			store.dispatch(BaseAction.setWSId(subId, name, future));
 			if (message.body) {
 				//console.log('got message with body ', message.body);
 				callback(message.body);
@@ -34,7 +40,7 @@ const StompService = (props: StompServiceProps) => {
 				console.log('got empty message');
 			}
 		});
-		store.dispatch(BaseAction.setWSId(subId));
+		store.dispatch(BaseAction.setWSId(subId, name, future));
 		client.send(sendurl, {}, sendMsg);
 	};
 
@@ -46,21 +52,11 @@ const StompService = (props: StompServiceProps) => {
 	client.heartbeat.outgoing = 4000;
 	client.heartbeat.incoming = 4000;
 
-	const res = {
-		disconnect: () =>
-			client.disconnect(() => {
-				console.log('disconnect ws');
-			}),
-		unsubscribe: () => {
-			const wsId = store.getState().base.wsId
-			if (wsId) {
-				wsId.unsubscribe()
-				store.dispatch(BaseAction.setWSId(null));
-			}
-		},
+	return () => {
+		client.disconnect(() => {
+			console.log('disconnect ws');
+		});
 	};
-
-	return res;
 };
 
 export default StompService;

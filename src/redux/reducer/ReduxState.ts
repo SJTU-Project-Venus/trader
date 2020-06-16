@@ -17,7 +17,11 @@ export interface UserProps {
 
 export interface BaseReducerStateProps {
 	user: UserProps;
-	wsId: Stomp.Subscription | null;
+	wsId: {
+		marketdepth: { sub: Stomp.Subscription | null; future: string };
+		pending: Stomp.Subscription | null;
+		deals: Stomp.Subscription | null;
+	};
 }
 
 export interface ReduxState {
@@ -33,7 +37,14 @@ const initialReduxState: ReduxState = {
 			login: false,
 			access_token: '',
 		},
-		wsId: null,
+		wsId: {
+			marketdepth: {
+				sub: null,
+				future: 'OIL-SEP22',
+			},
+			deals: null,
+			pending: null,
+		},
 	},
 };
 

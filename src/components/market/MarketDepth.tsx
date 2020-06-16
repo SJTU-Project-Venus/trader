@@ -19,6 +19,7 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { FutureNames, BrokerNames } from '../order/pending/OrderFormCol';
+import store from '../../redux/store/Store';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -85,10 +86,11 @@ const MarketDepth = () => {
 
 	React.useEffect(() => {
 		setData([]);
-	}, [futureName]);
+	}, [broker, futureName]);
 
 	React.useEffect(() => {
-		const disconnect = StompService({
+		const future = futureName;
+		StompService({
 			subscribeurl: '/user/topic/orderBook',
 			callback: (msg: string) => {
 				console.log('market depth get msg', msg);
@@ -123,10 +125,10 @@ const MarketDepth = () => {
 				setData(tmp);
 			},
 			sendurl: '/app/orderBook',
-			sendMsg: JSON.stringify({ futureName: futureName, brokerName: broker }),
+			sendMsg: JSON.stringify({ futureName: future, brokerName: broker }),
+			future: futureName,
+			name: 'MARKETDEPTH',
 		});
-
-		return disconnect.unsubscribe;
 	}, [broker, futureName]);
 
 	return (
@@ -169,6 +171,10 @@ const MarketDepth = () => {
 											value={futureName}
 											onChange={(e: any) => {
 												const name = e.target.value as string;
+												const mar = store.getState().base.wsId.marketdepth;
+												if (mar.future !== name && mar.sub) {
+													mar.sub.unsubscribe();
+												}
 												setFutureName(name);
 											}}
 											displayEmpty

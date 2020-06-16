@@ -30,7 +30,7 @@ steps:
         from_secret: dockerhub_secrets
       repo: wwwumr/trader
       tags:
-        - v1.0.4
+        - v1.0.6
     when:
       branch:
         - master
