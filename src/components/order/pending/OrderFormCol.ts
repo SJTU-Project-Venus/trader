@@ -175,7 +175,7 @@ export const CancelOrderCols = (orderId: number[]): OrderColmuns[] => [
 		component: HookComponentsType.SELECT,
 		label: '中介公司',
 		name: 'brokerName',
-		options: easyOptions(['M', 'T']),
+		options: easyOptions(BrokerNames),
 	},
 	{
 		component: HookComponentsType.SELECT,

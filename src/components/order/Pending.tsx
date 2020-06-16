@@ -141,7 +141,7 @@ const Pending = () => {
 
 	const onSubmit = (data: OrderFormProps) => {
 		console.log('order form data', data);
-		const order: TraderOrder = processOrderFormData(data);
+		const order: TraderOrder = processOrderFormData(data, pendingOrders);
 		console.log('processed order', order);
 		OrderApi.createOrder(order).then((res) => {
 			console.log('create order res', res);

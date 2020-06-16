@@ -1,3 +1,4 @@
+import { PendingOrderProps } from './../../../apis/OrderApi';
 import {
 	SideType,
 	OrderType,
@@ -101,7 +102,10 @@ export const OrderTypeArray = [
 export const OrderTypeNameArray = ['Limit', 'Stop', 'Cancel', 'Market'];
 export const TargetTypeArray = [OrderType.MARKET, OrderType.LIMIT];
 
-export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
+export const processOrderFormData = (
+	order: OrderFormProps,
+	pendingOrders: PendingOrderProps[]
+): TraderOrder => {
 	let orderProcessed: TraderOrder;
 	const { traderCompany, traderName } = store.getState().base.user;
 	switch (order.orderType) {
@@ -150,9 +154,13 @@ export const processOrderFormData = (order: OrderFormProps): TraderOrder => {
 		}
 		case OrderType.CANCEL: {
 			const tmpOrder = order as CancelOrderFormProps;
+			const pending = pendingOrders.find((elem) => {
+				return elem.orderId === tmpOrder.orderId;
+			});
 			orderProcessed = {
 				...tmpOrder,
 				id: -1,
+				futureName: pending?.futureName,
 				traderCompany: traderCompany,
 				traderName: traderName,
 				status: StatusType.CANCELPENDING,
